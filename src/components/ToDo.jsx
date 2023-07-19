@@ -1,5 +1,4 @@
 import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
-import React, { useState } from 'react'
 import { db } from './js/firebase';
 
 const ToDo = ({ objTask: { task, priority, date, tags, id, realizado }, setTask, setTags }) => {

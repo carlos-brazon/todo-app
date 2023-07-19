@@ -10,7 +10,6 @@ function App() {
   const [task, setTask] = useState([]);
   const [tags, setTags] = useState(['all']);
   const [showBackground, setShowBackground] = useState(true);
-  console.log(task);
 
   useEffect(() => {
     const timer = setTimeout(() => {

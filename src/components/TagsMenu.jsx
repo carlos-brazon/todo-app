@@ -10,7 +10,6 @@ const TagsMenu = ({ strTags, setTask, setTags }) => {
       docFirebase.forEach((doc) => {
         arrayFromFirebase.push(doc.data())
       });
-    console.log(arrayFromFirebase);
 
     const arrayObjTags = [...arrayFromFirebase].filter(tag => tag.tags === strTags);
 

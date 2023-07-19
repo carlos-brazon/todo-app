@@ -12,8 +12,6 @@ const Form = ({ setTask, setTags }) => {
 	}
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		// const task = { ...user, id: Math.floor(Math.random() * 100000000), realizado: false }
-
 		const referencia = await addDoc(collection(db, "users"), user);
 		const actualizar = doc(db, "users", referencia.id);
 		await updateDoc(actualizar, {
@@ -22,7 +20,6 @@ const Form = ({ setTask, setTags }) => {
 		});
 
 		setTask(prev => {
-			// localStorage.setItem("localTask", JSON.stringify([...prev, task]))
 			return [...prev, { ...user, id: referencia.id, realizado: false }]
 		});
 
@@ -60,7 +57,7 @@ const Form = ({ setTask, setTags }) => {
 				</div>
 			</div>
 
-			<input className='border border-neutral-400 bg-slate-200 hover:bg-slate-400 duration-1000  w-32 h-10 rounded' type="submit" />
+			<input className='border border-neutral-400 bg-slate-200 hover:bg-slate-400 duration-1000  w-32 h-10 rounded' type="submit" value='Create' />
 
 		</form>
 	);
