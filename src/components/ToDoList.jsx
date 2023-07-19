@@ -1,12 +1,20 @@
 import React from 'react'
 import ToDo from './ToDo'
-
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './js/firebase';
 
 const ToDoList = ({ task, setTask, setTags }) => {
-  const dataFromLocalStore = JSON.parse(localStorage.getItem('localTask')) || [];
+  const dataFromFirebase = [];
+  const getArrayFromFirebase = async () => {
+    const docFirebase = await getDocs(collection(db, "users"));
+    docFirebase.forEach((doc) => {
+      dataFromFirebase.push(doc.data());
+    });
+  }
+  getArrayFromFirebase();
 
-  const handleClick = () => setTask(prev => dataFromLocalStore.sort((a, b) => new Date(a.date) - new Date(b.date)));
-  const handleClick2 = () => setTask(prev => dataFromLocalStore.sort((a, b) => new Date(b.date) - new Date(a.date)));
+  const handleClick = () => setTask(prev => dataFromFirebase.sort((a, b) => new Date(a.date) - new Date(b.date)));
+  const handleClick2 = () => setTask(prev => dataFromFirebase.sort((a, b) => new Date(b.date) - new Date(a.date)));
 
   return (
     <div className='flex flex-col gap-3 items-center'>

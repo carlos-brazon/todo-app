@@ -1,15 +1,23 @@
+import { collection, getDocs } from 'firebase/firestore';
 import React, { useState } from 'react'
+import { db } from './js/firebase';
 
-const TagsMenu = ({ strTags, task, setTask, setTags }) => {
+const TagsMenu = ({ strTags, setTask, setTags }) => {
 
-  const handleClick = () => {
-    const dataFromLocalStore = JSON.parse(localStorage.getItem('localTask')) || [];
-    const arrayObjTags = [...dataFromLocalStore].filter(tag => tag.tags === strTags);
+  const handleClick = async () => {
+    const arrayFromFirebase = [];
+      const docFirebase = await getDocs(collection(db, "users"));
+      docFirebase.forEach((doc) => {
+        arrayFromFirebase.push(doc.data())
+      });
+    console.log(arrayFromFirebase);
+
+    const arrayObjTags = [...arrayFromFirebase].filter(tag => tag.tags === strTags);
 
     if (strTags === 'all') {
-      if (dataFromLocalStore.length >= 1) {
-        setTask(dataFromLocalStore);
-        const ArrayFiltradoTags = dataFromLocalStore.reduce((accumulator, obj) => {
+      if (arrayFromFirebase.length >= 1) {
+        setTask(arrayFromFirebase);
+        const ArrayFiltradoTags = arrayFromFirebase.reduce((accumulator, obj) => {
           if (obj.tags) {
             if (!accumulator.includes(obj.tags)) {
               accumulator.push(obj.tags);

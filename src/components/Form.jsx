@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState } from "react";
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import { db } from './js/firebase';
 
 const Form = ({ setTask, setTags }) => {
 	const [user, setUser] = useState({ priority: 'Low' });
@@ -8,14 +10,20 @@ const Form = ({ setTask, setTags }) => {
 		const inputName = event.target.name;
 		setUser(prev => ({ ...prev, [inputName]: event.target.value }));
 	}
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const task = { ...user, id: Math.floor(Math.random() * 100000000), realizado: false }
+		// const task = { ...user, id: Math.floor(Math.random() * 100000000), realizado: false }
 
-		setTask(prevTaskList => {
-			localStorage.setItem("localTask", JSON.stringify([...prevTaskList, task]))
+		const referencia = await addDoc(collection(db, "users"), user);
+		const actualizar = doc(db, "users", referencia.id);
+		await updateDoc(actualizar, {
+			id: referencia.id,
+			realizado: false
+		});
 
-			return [...prevTaskList, task]
+		setTask(prev => {
+			// localStorage.setItem("localTask", JSON.stringify([...prev, task]))
+			return [...prev, { ...user, id: referencia.id, realizado: false }]
 		});
 
 		setTags(prev => {
@@ -51,7 +59,6 @@ const Form = ({ setTask, setTags }) => {
 					</div>
 				</div>
 			</div>
-
 
 			<input className='border border-neutral-400 bg-slate-200 hover:bg-slate-400 duration-1000  w-32 h-10 rounded' type="submit" />
 
